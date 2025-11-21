@@ -1,9 +1,9 @@
 var request = require("request");const { readdirSync, readFileSync, writeFileSync, existsSync, copySync, createWriteStream, createReadStream } = require("fs-extra");
 module.exports.config = {
-	name: "0admin",
+	name: "RAMIM",
 	version: "1.0.5",
 	hasPermssion: 0,
-	credits: "𝐂𝐘𝐁𝐄𝐑 ☢️_𖣘 -𝐁𝐎𝐓 ⚠️ 𝑻𝑬𝑨𝑴_ ☢️",
+	credits: "𝐂𝐘𝐁𝐄𝐑_🎀ƒꪖнɪꪑꫝ",
 	description: "Admin Config",
 	commandCategory: "Admin",
 	usages: "Admin",
