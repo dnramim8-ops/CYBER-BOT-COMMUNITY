@@ -1,26 +1,47 @@
-name: Node.js CI
+import express from "express";
+import fs from "fs";
+import path from "path";
+import axios from "axios";
 
-on:
-  workflow_dispatch:
-  
+const app = express();
+app.use(express.json());
 
-jobs:
-  build:
+const __dirname = path.resolve();
+const config = JSON.parse(fs.readFileSync("./config.json", "utf8"));
+const prefix = config.prefix;
 
+const commands = new Map();
 
-    runs-on: ubuntu-latest
+// Load all commands
+const files = fs.readdirSync("./commands").filter(f => f.endsWith(".js"));
+for (let file of files) {
+  const cmd = await import(`./commands/${file}`);
+  commands.set(cmd.name, cmd);
+}
 
-    strategy:
-      matrix:
-        node-version: [16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+app.post("/bot", async (req, res) => {
+  const message = req.body.message;
+  if (!message.startsWith(prefix)) return res.json({ reply: null });
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm install
-    - run: npm start
+  const args = message.slice(prefix.length).trim().split(/ +/);
+  const cmdName = args.shift().toLowerCase();
+
+  const cmd = commands.get(cmdName);
+  if (!cmd) return res.json({ reply: "Unknown command." });
+
+  try {
+    const result = await cmd.run(args);
+    return res.json({ reply: result });
+  } catch (err) {
+    return res.json({ reply: "Error executing command." });
+  }
+});
+
+// Ping check
+app.get("/", (req, res) => {
+  res.send("RHMIM MLS Bot is running!");
+});
+
+app.listen(3000, () => {
+  console.log("Bot Server Running on Port 3000");
+});
