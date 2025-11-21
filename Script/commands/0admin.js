@@ -3,7 +3,7 @@ module.exports.config = {
 	name: "0admin",
 	version: "1.0.5",
 	hasPermssion: 0,
-	credits: "𝐂𝐘𝐁𝐄𝐑 ☢️_𖣘 -𝐁𝐎𝐓 ⚠️ 𝑻𝑬𝑨𝑴_ ☢️",
+	credits:  cyber Fahima ",
 	description: "Admin Config",
 	commandCategory: "Admin",
 	usages: "Admin",
